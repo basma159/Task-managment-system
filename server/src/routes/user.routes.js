@@ -1,12 +1,9 @@
 import { Router } from "express";
-import UserModel from "../models/User.model.js";
+import { register } from "../controllers/user.controller.js";
 
 const UserRouter = Router();
 
-UserRouter.post("/register", (req, res) => {
-    const user = new UserModel (req.body);
-    user.save()
-    res.status(201).send("User created sucessfully");
-})
+// register route
+UserRouter.post("/register", register)
 
 export default UserRouter;

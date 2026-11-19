@@ -1,27 +1,29 @@
-import express from "express"
-import { config } from "dotenv"
-import cors from "cors"
-import UserRouter from "./src/routes/user.routes.js"
-config()
-import connectedDB from "./src/config/db.js"
+import express from "express";
+import { config } from "dotenv";
+import cors from "cors";
+import UserRouter from "./src/routes/user.routes.js";
+import connectedDB from "./src/config/db.js";
 
-const app = express()
-const port = process.env.PORT || 3000
+config();
 
-app.use(cors())
-app.use(express.json())
-app.use("/api/users",UserRouter)
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.json());
+app.use("/api/users", UserRouter);
 
 
 async function connect() {
     try {
         await connectedDB()
         app.listen(port, () => {
-            console.log(`server is listening on port ${port}`)
+            console.log(`server is listening on port ${port}`);
         })
     }
     catch (error) {
-        console.log("ERROR : ", error)
+        console.log("ERROR : ", error);
+        process.exit(1); // stop app if connection to DB is failed
     }
 }
-connect()
+connect();
