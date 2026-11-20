@@ -5,6 +5,7 @@ import email from "../assets/email.png";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 function Register() {
   const [visible, setvisible] = useState(false);
@@ -14,7 +15,7 @@ function Register() {
   }
 
   return (
-    <div className="w-full min-h-screen flex flex-col lg:flex-row">
+    <div className="w-full min-h-screen flex flex-col lg:flex-row gap-6 mb-4">
 
       {/* Image Section */}
       <div className="w-full h-[40vh] lg:w-1/2 lg:h-screen bg-[#C9C5FA] flex justify-center items-center overflow-hidden">
@@ -92,6 +93,7 @@ function Register() {
               className="absolute right-3 top-4 cursor-pointer text-gray-500"
             />
           </div>
+
           {/* Confirm Password Input */}
           <div className="relative">
             <input
@@ -121,7 +123,8 @@ function Register() {
           >
             Create Account
           </button>
-          <p className="text-center">Already have an account? <a href="/login" className="text-purple-800 ">Login</a></p>
+          <p className="text-center text-gray-600">Already have an account?
+            <Link to="/login" className="text-purple-700 font-semibold ml-1">Login</Link></p>
 
         </form>
       </div>

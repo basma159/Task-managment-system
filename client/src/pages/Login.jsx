@@ -5,16 +5,17 @@ import email from "../assets/email.png";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 
 function Login() {
-    const [visiable, setVisiable] = useState(false);
+    const [visible, setvisible] = useState(false);
 
-    function isVisiable() {
-        setVisiable(!visiable);
+    function togglePasswordVisibility() {
+        setvisible(!visible);
     }
 
     return (
-        <div className="w-full min-h-screen flex flex-col lg:flex-row">
+        <div className="w-full min-h-screen flex flex-col lg:flex-row gap-6 mb-4">
 
             {/* Image Section */}
             <div className="w-full h-[40vh] lg:w-1/2 lg:h-screen bg-[#C9C5FA] flex justify-center items-center overflow-hidden">
@@ -23,7 +24,7 @@ function Login() {
                     alt="Task Manager"
                     className="hidden md:block w-full h-full object-contain"
                 />
-                     <img
+                <img
                     src={taskMobile}
                     alt="Task Manager"
                     className="md:hidden w-full h-full object-contain"
@@ -61,7 +62,7 @@ function Login() {
                     {/* Password Input */}
                     <div className="relative">
                         <input
-                            type={visiable ? "text" : "password"}
+                            type={visible ? "text" : "password"}
                             placeholder="Password"
                             className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500"
                         />
@@ -73,8 +74,8 @@ function Login() {
                         />
 
                         <FontAwesomeIcon
-                            onClick={isVisiable}
-                            icon={visiable ? faEyeSlash : faEye}
+                            onClick={togglePasswordVisibility}
+                            icon={visible ? faEyeSlash : faEye}
                             className="absolute right-3 top-4 cursor-pointer text-gray-500"
                         />
                     </div>
@@ -86,6 +87,12 @@ function Login() {
                     >
                         Login
                     </button>
+                    <p className="text-center text-gray-600">
+                        Don't have an account?
+                        <Link to="/register" className="text-purple-700 font-semibold ml-1">
+                            Register
+                        </Link>
+                    </p>
 
                 </form>
             </div>
