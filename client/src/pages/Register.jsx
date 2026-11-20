@@ -8,10 +8,15 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 function Register() {
-  const [visible, setvisible] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
   function togglePasswordVisibility() {
-    setvisible(!visible);
+    setPasswordVisible(!passwordVisible);
+  }
+
+  function toggleConfirmPasswordVisibility() {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
   }
 
   return (
@@ -76,9 +81,9 @@ function Register() {
           {/* Password Input */}
           <div className="relative">
             <input
-              type={visible ? "text" : "password"}
+              type={passwordVisible ? "text" : "password"}
               placeholder="Password"
-              className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500"
+              className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500 [&::-ms-reveal]:hidden"
             />
 
             <img
@@ -86,20 +91,21 @@ function Register() {
               alt="lock"
               className="absolute left-3 top-4 w-4"
             />
+            <button onClick={togglePasswordVisibility} type="button">
+              <FontAwesomeIcon
+                icon={passwordVisible ? faEyeSlash : faEye}
+                className="absolute right-3 top-4 cursor-pointer text-gray-500"
+              />
+            </button>
 
-            <FontAwesomeIcon
-              onClick={togglePasswordVisibility}
-              icon={visible ? faEyeSlash : faEye}
-              className="absolute right-3 top-4 cursor-pointer text-gray-500"
-            />
           </div>
 
           {/* Confirm Password Input */}
           <div className="relative">
             <input
-              type={visible ? "text" : "password"}
+              type={confirmPasswordVisible ? "text" : "password"}
               placeholder="Confirm Password"
-              className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500"
+              className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500 [&::-ms-reveal]:hidden"
             />
 
             <img
@@ -108,11 +114,12 @@ function Register() {
               className="absolute left-3 top-4 w-4"
             />
 
-            <FontAwesomeIcon
-              onClick={togglePasswordVisibility}
-              icon={visible ? faEyeSlash : faEye}
-              className="absolute right-3 top-4 cursor-pointer text-gray-500"
-            />
+            <button onClick={toggleConfirmPasswordVisibility} type="button">
+              <FontAwesomeIcon
+                icon={confirmPasswordVisible ? faEyeSlash : faEye}
+                className="absolute right-3 top-4 cursor-pointer text-gray-500"
+              />
+            </button>
           </div>
 
 

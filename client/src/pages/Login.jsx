@@ -8,10 +8,10 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 function Login() {
-    const [visible, setvisible] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     function togglePasswordVisibility() {
-        setvisible(!visible);
+        setVisible(!visible);
     }
 
     return (
