@@ -17,7 +17,7 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
 
 @keyframes timer {
     from {
-        transform: translateY(20px);
+        transform: translateY(200px);
         opacity: 0;
     }
 

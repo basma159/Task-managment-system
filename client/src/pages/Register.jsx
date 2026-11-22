@@ -77,7 +77,7 @@ function Register() {
   }
   return (
     <div className="relative w-full min-h-screen flex flex-col lg:flex-row gap-6 mb-4 lg:mb-0">
-      <div className={`successNot absolute ${successNot ? "block" : "hidden"}  top-10 right-4 bg-white shadow-2xl ring-2  ring-purple-900 rounded-xl p-2 z-50`}>
+      <div className={`successNot absolute ${successNot ? "block" : "hidden"}  bottom-10 right-4 bg-white shadow-2xl ring-2  ring-purple-900 rounded-xl p-2 z-50`}>
         <p className="flex justify-center items-center gap-3"><FontAwesomeIcon icon={faCheck} style={{ backgroundColor: "purple", color: "white", borderRadius: "20px", padding: "7px" }} />User created successfully</p>
       </div>
       {/* Image Section */}
@@ -97,11 +97,11 @@ function Register() {
       {/* Login Section */}
       <div className="w-full lg:w-1/2 min-h-[60vh] lg:h-screen flex flex-col justify-center items-center gap-3 px-6">
 
-        <h2 className="text-4xl font-bold">
+        <h2 className="text-2xl lg:text-4xl font-bold">
           Create Your Account
         </h2>
 
-        <h2 className="text-xl text-gray-600">
+        <h2 className="text-lg lg:text-xl text-gray-600">
           Sign up to get started
         </h2>
 
