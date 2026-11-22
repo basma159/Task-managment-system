@@ -15,7 +15,7 @@ function Login() {
     }
 
     return (
-        <div className="w-full min-h-screen flex flex-col lg:flex-row gap-6 mb-4">
+        <div className="w-full min-h-screen flex flex-col lg:flex-row  gap-10 mb-4 md:mb-0">
 
             {/* Image Section */}
             <div className="w-full h-[40vh] lg:w-1/2 lg:h-screen bg-[#C9C5FA] flex justify-center items-center overflow-hidden">
@@ -32,7 +32,7 @@ function Login() {
             </div>
 
             {/* Login Section */}
-            <div className="w-full lg:w-1/2 min-h-[60vh] lg:h-screen flex flex-col justify-center items-center gap-3 px-6">
+            <div className="w-full lg:w-1/2 lg:min-h-[60vh] lg:h-screen flex flex-col justify-center items-center gap-3 px-6">
 
                 <h2 className="text-4xl font-bold">
                     Welcome Back!
