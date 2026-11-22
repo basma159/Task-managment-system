@@ -20,8 +20,9 @@ function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [successNot, setSuccessNot] = useState(false);
-  const [errorConfirm, setErrorConfirm] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState({
+    name: "", email: "", password: "", confirmPassword: "", general: ""
+  });
 
   useEffect(() => {
     if (successNot) {
@@ -42,11 +43,10 @@ function Register() {
 
   async function handleForm(e) {
     e.preventDefault();
-    setErrorMessage("");
-    setErrorConfirm("");
+    setErrors({ name: "", email: "", password: "", confirmPassword: "", general: "" });
     try {
       if (password !== confirmPassword) {
-        return setErrorConfirm("Password is Not Identical!")
+        return setErrors(prev => ({ ...prev, confirmPassword: "Password is Not Identical!" }))
       }
 
       await axios.post(`${API_URL}/register`, {
@@ -57,21 +57,26 @@ function Register() {
       setPassword("");
       setConfirmPassword("");
       setSuccessNot(true);
-      setErrorConfirm("");
-      setErrorMessage("");
 
     }
     catch (error) {
       if (error.response) {
-        return setErrorMessage(error.response.data.message);
+        const field = error.response.data.field;
+        const message = error.response.data.message;
+        if (field && Object.keys(errors).includes(field)) {
+          return setErrors(prev => ({ ...prev, [field]: message }));
+        }
+        else {
+          return setErrors(prev => ({ ...prev, general: "Error!!" }));
+        }
       }
       else {
-        return setErrorMessage("Error!!");
+        return setErrors(prev => ({ ...prev, general: "Error!!" }));
       }
     }
   }
   return (
-    <div className="relative w-full min-h-screen flex flex-col lg:flex-row gap-6 mb-4">
+    <div className="relative w-full min-h-screen flex flex-col lg:flex-row gap-6 mb-4 lg:mb-0">
       <div className={`successNot absolute ${successNot ? "block" : "hidden"}  top-10 right-4 bg-white shadow-2xl ring-2  ring-purple-900 rounded-xl p-2 z-50`}>
         <p className="flex justify-center items-center gap-3"><FontAwesomeIcon icon={faCheck} style={{ backgroundColor: "purple", color: "white", borderRadius: "20px", padding: "7px" }} />User created successfully</p>
       </div>
@@ -103,24 +108,48 @@ function Register() {
         <form className="w-full max-w-md flex flex-col gap-6 pt-4" onSubmit={handleForm}>
           {/* Name Input */}
           <InputField type={"text"} placeholder={"Full Name"} image={emailIcon} nameImage={"name"}
-            value={name} onChange={(e) => setName(e.target.value)} />
+            value={name} onChange={(e) => {
+              setName(e.target.value);
+              setErrors(prev => ({ ...prev, name: "" }))
+            }} />
+
+          {/* handle name errors */}
+          {errors.name && <ErrorField message={errors.name} />}
 
           {/* Email Input */}
           <InputField type={"email"} placeholder={"Email Address"} image={emailIcon} nameImage={"email"}
-            value={email} onChange={(e) => setEmail(e.target.value)} />
+            value={email} onChange={(e) => {
+              setEmail(e.target.value);
+              setErrors(prev => ({ ...prev, email: "" }))
+            }} />
+
+          {/* handle email errors */}
+          {errors.email && <ErrorField message={errors.email} />}
 
           {/* Password Input */}
           <InPasswordField type={passwordVisible ? "text" : "password"} placeholder={"Password"}
-            value={password} onChange={(e) => setPassword(e.target.value)}
+            value={password} onChange={(e) => {
+              setPassword(e.target.value);
+              setErrors(prev => ({ ...prev, password: "" }))
+            }}
             Function={togglePasswordVisibility} icon={passwordVisible ? faEyeSlash : faEye} />
+
+          {/* handle password errors */}
+          {errors.password && <ErrorField message={errors.password} />}
 
           {/* Confirm Password Input */}
           <InPasswordField type={confirmPasswordVisible ? "text" : "password"} placeholder={"Confirm Password"}
-            value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
+            value={confirmPassword} onChange={(e) => {
+              setConfirmPassword(e.target.value);
+              setErrors(prev => ({ ...prev, confirmPassword: "" }))
+            }}
             Function={toggleConfirmPasswordVisibility} icon={confirmPasswordVisible ? faEyeSlash : faEye} />
 
-          {errorConfirm && <ErrorField message={errorConfirm} />}
+          {/* handle confirm password errors */}
+          {errors.confirmPassword && <ErrorField message={errors.confirmPassword} />}
 
+          {/* handle general errors */}
+          {errors.general && <ErrorField message={errors.general} />}
 
           {/* Login Button */}
           <button
