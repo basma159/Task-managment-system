@@ -8,6 +8,7 @@ config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+const host = "0.0.0.0"
 
 app.use(cors());
 app.use(express.json());
@@ -17,7 +18,7 @@ app.use("/api/users", UserRouter);
 async function connect() {
     try {
         await connectedDB()
-        app.listen(port, () => {
+        app.listen(port, host, () => {
             console.log(`server is listening on port ${port}`);
         })
     }
