@@ -2,12 +2,14 @@ import taskPC from "../assets/task-pc.jpg";
 import taskMobile from "../assets/task-mobile.jpg";
 import lock from "../assets/lock.png";
 import emailIcon from "../assets/email.png";
-import { useState } from "react";
+import ErrorField from "../components/ErrorField";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
-const APT_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL
 
 function Register() {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -16,6 +18,18 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [successNot, setSuccessNot] = useState(false);
+  const [errorConfirm, setErrorConfirm] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (successNot) {
+      const timer = setTimeout(() => {
+        setSuccessNot(false)
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [successNot])
 
   function togglePasswordVisibility() {
     setPasswordVisible(!passwordVisible);
@@ -24,20 +38,42 @@ function Register() {
   function toggleConfirmPasswordVisibility() {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   }
+
   async function handleForm(e) {
     e.preventDefault();
+    setErrorMessage("");
+    setErrorConfirm("");
     try {
-      await axios.post(`${APT_URL}/register`, {
+      if (password !== confirmPassword) {
+        return setErrorConfirm("Password is Not Identical!")
+      }
+
+      await axios.post(`${API_URL}/register`, {
         name, email, password
       });
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setSuccessNot(true);
+      setErrorConfirm("");
+      setErrorMessage("");
 
-    } catch (error) {
-
+    }
+    catch (error) {
+      if (error.response) {
+        return setErrorMessage(error.response.data.message);
+      }
+      else {
+        return setErrorMessage("Error!!");
+      }
     }
   }
   return (
-    <div className="w-full min-h-screen flex flex-col lg:flex-row gap-6 mb-4">
-
+    <div className="relative w-full min-h-screen flex flex-col lg:flex-row gap-6 mb-4">
+      <div className={`successNot absolute ${successNot ? "block" : "hidden"}  top-10 right-4 bg-white shadow-2xl ring-2  ring-purple-900 rounded-xl p-2 z-50`}>
+        <p className="flex justify-center items-center gap-3"><FontAwesomeIcon icon={faCheck} style={{ backgroundColor: "purple", color: "white", borderRadius: "20px", padding: "7px" }} />User created successfully</p>
+      </div>
       {/* Image Section */}
       <div className="w-full h-[40vh] lg:w-1/2 lg:h-screen bg-[#C9C5FA] flex justify-center items-center overflow-hidden">
         <img
@@ -92,6 +128,7 @@ function Register() {
               alt="email"
               className="absolute left-3 top-4 w-4"
             />
+            {errorMessage && <ErrorField message={errorMessage} />}
           </div>
 
           {/* Password Input */}
@@ -136,6 +173,7 @@ function Register() {
                 className="absolute right-3 top-4 cursor-pointer text-gray-500"
               />
             </button>
+            {errorConfirm && <ErrorField message={errorConfirm} />}
           </div>
 
 

@@ -10,3 +10,19 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
     visibility: hidden;
     display: none !important;
 }
+
+.successNot {
+    animation: timer .4s ;
+}
+
+@keyframes timer {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
