@@ -18,6 +18,7 @@ const UserSchema = new Schema({
         trim: true,
         required: true,
         select: false,
+        minlength: 8,
     },
 },
     {
