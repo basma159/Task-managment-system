@@ -1,8 +1,9 @@
 import taskPC from "../assets/task-pc.jpg";
 import taskMobile from "../assets/task-mobile.jpg";
-import lock from "../assets/lock.png";
 import emailIcon from "../assets/email.png";
 import ErrorField from "../components/ErrorField";
+import InputField from "../components/InputField";
+import InPasswordField from "../components/InPasswordField";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -101,80 +102,24 @@ function Register() {
 
         <form className="w-full max-w-md flex flex-col gap-6 pt-4" onSubmit={handleForm}>
           {/* Name Input */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Full Name"
-              className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500"
-              value={name} onChange={(e) => setName(e.target.value)} />
-
-            <img
-              src={emailIcon}
-              alt="name"
-              className="absolute left-3 top-4 w-4"
-            />
-          </div>
+          <InputField type={"text"} placeholder={"Full Name"} image={emailIcon} nameImage={"name"}
+            value={name} onChange={(e) => setName(e.target.value)} />
 
           {/* Email Input */}
-          <div className="relative">
-            <input
-              type="email"
-              placeholder="Email Address"
-              className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500"
-              value={email} onChange={(e) => setEmail(e.target.value)} />
-
-            <img
-              src={emailIcon}
-              alt="email"
-              className="absolute left-3 top-4 w-4"
-            />
-            {errorMessage && <ErrorField message={errorMessage} />}
-          </div>
+          <InputField type={"email"} placeholder={"Email Address"} image={emailIcon} nameImage={"email"}
+            value={email} onChange={(e) => setEmail(e.target.value)} />
 
           {/* Password Input */}
-          <div className="relative">
-            <input
-              type={passwordVisible ? "text" : "password"}
-              placeholder="Password"
-              className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500 [&::-ms-reveal]:hidden"
-              value={password} onChange={(e) => setPassword(e.target.value)} />
-
-            <img
-              src={lock}
-              alt="lock"
-              className="absolute left-3 top-4 w-4"
-            />
-            <button onClick={togglePasswordVisibility} type="button">
-              <FontAwesomeIcon
-                icon={passwordVisible ? faEyeSlash : faEye}
-                className="absolute right-3 top-4 cursor-pointer text-gray-500"
-              />
-            </button>
-
-          </div>
+          <InPasswordField type={passwordVisible ? "text" : "password"} placeholder={"Password"}
+            value={password} onChange={(e) => setPassword(e.target.value)}
+            Function={togglePasswordVisibility} icon={passwordVisible ? faEyeSlash : faEye} />
 
           {/* Confirm Password Input */}
-          <div className="relative">
-            <input
-              type={confirmPasswordVisible ? "text" : "password"}
-              placeholder="Confirm Password"
-              className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500 [&::-ms-reveal]:hidden"
-              value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+          <InPasswordField type={confirmPasswordVisible ? "text" : "password"} placeholder={"Confirm Password"}
+            value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}
+            Function={toggleConfirmPasswordVisibility} icon={confirmPasswordVisible ? faEyeSlash : faEye} />
 
-            <img
-              src={lock}
-              alt="lock"
-              className="absolute left-3 top-4 w-4"
-            />
-
-            <button onClick={toggleConfirmPasswordVisibility} type="button">
-              <FontAwesomeIcon
-                icon={confirmPasswordVisible ? faEyeSlash : faEye}
-                className="absolute right-3 top-4 cursor-pointer text-gray-500"
-              />
-            </button>
-            {errorConfirm && <ErrorField message={errorConfirm} />}
-          </div>
+          {errorConfirm && <ErrorField message={errorConfirm} />}
 
 
           {/* Login Button */}
