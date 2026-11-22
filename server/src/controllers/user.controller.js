@@ -8,60 +8,71 @@ async function register(req, res) {
         // handle name errors
         if (!name) {
             return res.status(400).json({
+                field: "name",
                 message: "Name Field is Required!",
             });
         }
         if (typeof name !== "string") {
             return res.status(400).json({
+                field: "name",
                 message: "Name must be string",
             });
         }
         if (name.trim() === "") {
             return res.status(400).json({
+                field: "name",
                 message: "Name Field is Required!",
             });
         }
         // handle email errors
         if (!email) {
             return res.status(400).json({
+                field: "email",
                 message: "Email Field is Required!",
             });
         }
         if (typeof email !== "string") {
             return res.status(400).json({
+                field: "email",
                 message: "Email must be string",
             });
         }
         const validEmail = email.trim();
         if (validEmail === "") {
             return res.status(400).json({
+                field: "email",
                 message: "Email Field is Required!",
             });
         }
 
         if (!validator.isEmail(validEmail)) {
             return res.status(400).json({
+                field: "email",
                 message: "Invalid Email Format",
             });
         }
         // handle password errors
         if (!password) {
             return res.status(400).json({
+                field: "password",
                 message: "Password Field is Required!",
             });
         }
         if (typeof password !== "string") {
             return res.status(400).json({
+                field: "password",
                 message: "Password must be string",
             });
         }
         if (password.trim() === "") {
             return res.status(400).json({
+                field: "password",
                 message: "Password Field is Required!",
             });
         }
         if (password.length < 8) {
             return res.status(400).json({
+                field: "password",
                 message: "Password must be at least 8 characters!",
             });
         }
@@ -74,11 +85,12 @@ async function register(req, res) {
     catch (error) {
         if (error.code === 11000) {
             return res.status(409).json({
+                field: "email",
                 message: "Email already exists",
             });
         }
-        res.status(400).json({
-            message: error.message,
+        res.status(500).json({
+            message: "Internal Server Error",
         });
     }
 }
