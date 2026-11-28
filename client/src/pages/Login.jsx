@@ -1,104 +1,127 @@
 import taskPC from "../assets/task-pc.jpg";
 import taskMobile from "../assets/task-mobile.jpg";
-import lock from "../assets/lock.png";
-import email from "../assets/email.png";
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import emailIcon from "../assets/email.png";
+import InputField from "../components/InputField";
+import InPasswordField from "../components/InPasswordField";
+import ButtonSub from "../components/ButtonSub";
+import ErrorField from "../components/ErrorField";
+import SuccessNot from "../components/SuccessNot";
+import Text from "../components/Text";
+import { useEffect, useState } from "react";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+const API_URL = import.meta.env.VITE_API_URL;
 
 function Login() {
-    const [visible, setVisible] = useState(false);
-
-    function togglePasswordVisibility() {
-        setVisible(!visible);
+  const [visible, setVisible] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [successNot, setSuccessNot] = useState(false);
+  const [error, setErrors] = useState({
+    email: "",
+    password: "",
+    general: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
+  function togglePasswordVisibility() {
+    setVisible(!visible);
+  }
+  useEffect(() => {
+    if (successNot) {
+      const timer = setTimeout(() => {
+        setSuccessNot(false);
+        navigate("/home");
+      }, 2000);
+      return () => clearTimeout(timer);
     }
+  }, [successNot, navigate]);
+  async function handleForm(e) {
+    e.preventDefault();
+    try {
+      setIsSubmitting(true);
+      const response = await axios.post(`${API_URL}/login`, {
+        email,
+        password,
+      });
+      setSuccessNot(true);
+      setEmail("");
+      setPassword("");
+      console.log(response);
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+    } catch (error) {
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
-    return (
-        <div className="w-full min-h-screen flex flex-col lg:flex-row  gap-10 mb-4 md:mb-0">
+  return (
+    <div className="w-full min-h-screen flex flex-col lg:flex-row  gap-10 mb-4 md:mb-0">
+      <SuccessNot text={"Login successfully"} successNot={successNot} />
+      {/* Image Section */}
+      <div className="w-full h-[40vh] lg:w-1/2 lg:h-screen bg-[#C9C5FA] flex justify-center items-center overflow-hidden">
+        <img
+          src={taskPC}
+          alt="Task Manager"
+          className="hidden md:block w-full h-full object-contain"
+        />
+        <img
+          src={taskMobile}
+          alt="Task Manager"
+          className="md:hidden w-full h-full object-contain"
+        />
+      </div>
 
-            {/* Image Section */}
-            <div className="w-full h-[40vh] lg:w-1/2 lg:h-screen bg-[#C9C5FA] flex justify-center items-center overflow-hidden">
-                <img
-                    src={taskPC}
-                    alt="Task Manager"
-                    className="hidden md:block w-full h-full object-contain"
-                />
-                <img
-                    src={taskMobile}
-                    alt="Task Manager"
-                    className="md:hidden w-full h-full object-contain"
-                />
-            </div>
+      {/* Login Section */}
+      <div className="w-full lg:w-1/2 lg:min-h-[60vh] lg:h-screen flex flex-col justify-center items-center gap-3 px-6">
+        <h2 className="text-4xl font-bold">Welcome Back!</h2>
 
-            {/* Login Section */}
-            <div className="w-full lg:w-1/2 lg:min-h-[60vh] lg:h-screen flex flex-col justify-center items-center gap-3 px-6">
+        <h2 className="text-xl text-gray-600">Login to your account</h2>
 
-                <h2 className="text-4xl font-bold">
-                    Welcome Back!
-                </h2>
+        <form
+          className="w-full max-w-md flex flex-col gap-6 pt-4"
+          onSubmit={handleForm}
+        >
+          {/* Email Input */}
 
-                <h2 className="text-xl text-gray-600">
-                    Login to your account
-                </h2>
+          <InputField
+            image={emailIcon}
+            nameImage={"email"}
+            type={"email"}
+            placeholder={"Email Address"}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          {/* Password Input */}
 
-                <form className="w-full max-w-md flex flex-col gap-6 pt-4">
+          <InPasswordField
+            type={visible ? "text" : "password"}
+            placeholder={"Password"}
+            Function={togglePasswordVisibility}
+            icon={visible ? faEyeSlash : faEye}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-                    {/* Email Input */}
-                    <div className="relative">
-                        <input
-                            type="email"
-                            placeholder="Email Address"
-                            className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500"
-                        />
+          {/* Login Button */}
 
-                        <img
-                            src={email}
-                            alt="email"
-                            className="absolute left-3 top-4 w-4"
-                        />
-                    </div>
+          <ButtonSub
+            isSubmitting={isSubmitting}
+            loading={"Loading..."}
+            noLoading={"Login"}
+          />
 
-                    {/* Password Input */}
-                    <div className="relative">
-                        <input
-                            type={visible ? "text" : "password"}
-                            placeholder="Password"
-                            className="py-3 px-10 w-full rounded-xl ring-purple-300 ring-1 outline-none focus:ring-purple-500"
-                        />
-
-                        <img
-                            src={lock}
-                            alt="lock"
-                            className="absolute left-3 top-4 w-4"
-                        />
-
-                        <FontAwesomeIcon
-                            onClick={togglePasswordVisibility}
-                            icon={visible ? faEyeSlash : faEye}
-                            className="absolute right-3 top-4 cursor-pointer text-gray-500"
-                        />
-                    </div>
-
-                    {/* Login Button */}
-                    <button
-                        type="submit"
-                        className="text-white bg-purple-800 py-3 w-full rounded-xl cursor-pointer hover:bg-purple-900 transition"
-                    >
-                        Login
-                    </button>
-                    <p className="text-center text-gray-600">
-                        Don't have an account?
-                        <Link to="/register" className="text-purple-700 font-semibold ml-1">
-                            Register
-                        </Link>
-                    </p>
-
-                </form>
-            </div>
-
-        </div>
-    );
+          <Text
+            text={"Don't have an account?"}
+            signLink={"/register"}
+            signText={"Register"}
+          />
+        </form>
+      </div>
+    </div>
+  );
 }
 
 export default Login;

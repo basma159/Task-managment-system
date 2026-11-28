@@ -4,11 +4,12 @@ import emailIcon from "../assets/email.png";
 import ErrorField from "../components/ErrorField";
 import InputField from "../components/InputField";
 import InPasswordField from "../components/InPasswordField";
+import ButtonSub from "../components/ButtonSub";
+import Text from "../components/Text";
+import SuccessNot from "../components/SuccessNot";
 import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -28,15 +29,16 @@ function Register() {
     general: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (successNot) {
       const timer = setTimeout(() => {
         setSuccessNot(false);
+        navigate("/login");
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [successNot]);
+  }, [successNot, navigate]);
 
   function togglePasswordVisibility() {
     setPasswordVisible(!passwordVisible);
@@ -56,6 +58,24 @@ function Register() {
       general: "",
     });
     try {
+      if (!name) {
+        return setErrors((prev) => ({
+          ...prev,
+          name: "Name is Required",
+        }));
+      }
+      if (!email) {
+        return setErrors((prev) => ({
+          ...prev,
+          email: "Email is Required",
+        }));
+      }
+      if (!password) {
+        return setErrors((prev) => ({
+          ...prev,
+          password: "Password is Required",
+        }));
+      }
       if (!confirmPassword) {
         return setErrors((prev) => ({
           ...prev,
@@ -95,26 +115,10 @@ function Register() {
       setIsSubmitting(false);
     }
   }
-  const style = "text-white bg-purple-800 py-3 w-full rounded-xl";
 
   return (
     <div className="relative w-full min-h-screen flex flex-col lg:flex-row gap-10 mb-4 md:mb-0">
-      <div
-        className={`successNot absolute ${successNot ? "block" : "hidden"} bottom-10 right-4 bg-white shadow-2xl ring-1 ring-purple-900 rounded-xl p-2 z-50`}
-      >
-        <p className="flex justify-center items-center gap-3">
-          <FontAwesomeIcon
-            icon={faCheck}
-            style={{
-              backgroundColor: "purple",
-              color: "white",
-              borderRadius: "20px",
-              padding: "7px",
-            }}
-          />
-          User created successfully
-        </p>
-      </div>
+      <SuccessNot text={"User created successfully"} successNot={successNot} />
       {/* Image Section */}
       <div className="w-full h-[40vh] lg:w-1/2 lg:h-screen bg-[#C9C5FA] flex justify-center items-center overflow-hidden">
         <img
@@ -210,20 +214,17 @@ function Register() {
           {/* handle general errors */}
           {errors.general && <ErrorField message={errors.general} />}
 
-          {/* Login Button */}
-          <button
-            type="submit"
-            className={`${isSubmitting ? `${style} opacity-40 cursor-not-allowed` : `${style} cursor-pointer hover:bg-purple-900 transition`}`}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? "Saving..." : "Create Account"}
-          </button>
-          <p className="text-center text-gray-600">
-            Already have an account?
-            <Link to="/login" className="text-purple-700 font-semibold ml-1">
-              Login
-            </Link>
-          </p>
+          {/* Register Button */}
+          <ButtonSub
+            isSubmitting={isSubmitting}
+            loading={"Saving..."}
+            noLoading={"Create Account"}
+          />
+          <Text
+            text={"Already have an account?"}
+            signLink={"/login"}
+            signText={"Login"}
+          />
         </form>
       </div>
     </div>
