@@ -18,7 +18,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [successNot, setSuccessNot] = useState(false);
-  const [error, setErrors] = useState({
+  const [errors, setErrors] = useState({
     email: "",
     password: "",
     general: "",
@@ -39,7 +39,24 @@ function Login() {
   }, [successNot, navigate]);
   async function handleForm(e) {
     e.preventDefault();
+    setErrors({
+      email: "",
+      password: "",
+      general: "",
+    });
     try {
+      if (!email) {
+        return setErrors((prev) => ({
+          ...prev,
+          email: "Email is Required",
+        }));
+      }
+      if (!password) {
+        return setErrors((prev) => ({
+          ...prev,
+          password: "Password is Required",
+        }));
+      }
       setIsSubmitting(true);
       const response = await axios.post(`${API_URL}/login`, {
         email,
@@ -48,10 +65,20 @@ function Login() {
       setSuccessNot(true);
       setEmail("");
       setPassword("");
-      console.log(response);
       const token = response.data.token;
       localStorage.setItem("token", token);
     } catch (error) {
+      if (error.response) {
+        const field = error.response.data.field;
+        const message = error.response.data.message;
+        if (field && Object.keys(errors).includes(field)) {
+          return setErrors((prev) => ({ ...prev, [field]: message }));
+        } else {
+          return setErrors((prev) => ({ ...prev, general: "Error !" }));
+        }
+      } else {
+        return setErrors((prev) => ({ ...prev, general: "Error !" }));
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -92,8 +119,12 @@ function Login() {
             type={"email"}
             placeholder={"Email Address"}
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              setErrors((prev) => ({ ...prev, email: "" }));
+            }}
           />
+          {errors.email && <ErrorField message={errors.email} />}
           {/* Password Input */}
 
           <InPasswordField
@@ -102,8 +133,13 @@ function Login() {
             Function={togglePasswordVisibility}
             icon={visible ? faEyeSlash : faEye}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              setErrors((prev) => ({ ...prev, password: "" }));
+            }}
           />
+          {errors.password && <ErrorField message={errors.password} />}
+          {errors.general && <ErrorField message={errors.general} />}
 
           {/* Login Button */}
 
