@@ -67,11 +67,11 @@ function Register() {
           return setErrors(prev => ({ ...prev, [field]: message }));
         }
         else {
-          return setErrors(prev => ({ ...prev, general: "Error!!" }));
+          return setErrors(prev => ({ ...prev, general: "Error !" }));
         }
       }
       else {
-        return setErrors(prev => ({ ...prev, general: "Error!!" }));
+        return setErrors(prev => ({ ...prev, general: "Error !" }));
       }
     }
     finally {
